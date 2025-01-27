@@ -294,6 +294,16 @@ func createGlobalRoleWithNamespacedRules(client *rancher.Client, namespacedRules
 	return createdGlobalRole, nil
 }
 
+func createGlobalRoleWithRules(client *rancher.Client, Rules []rbacv1.PolicyRule) (*v3.GlobalRole, error) {
+	globalRole.Name = namegen.AppendRandomString("test-gr")
+	globalRole.Rules = Rules
+	createdGlobalRole, err := rbacapi.CreateGlobalRole(client, &globalRole)
+	if err != nil {
+		return nil, err
+	}
+	return createdGlobalRole, nil
+}
+
 func createProjectAndAddANamespace(client *rancher.Client, nsPrefix string) (string, error) {
 	project := projects.NewProjectTemplate(localcluster)
 	customProject, err := client.WranglerContext.Mgmt.Project().Create(project)
